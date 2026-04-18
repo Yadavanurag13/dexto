@@ -2716,6 +2716,15 @@ export const OverlayContainer = forwardRef<OverlayContainerHandle, OverlayContai
                     deleteBranch: true,
                 });
 
+                // CWD is now a deleted directory — move out before exit so
+                // downstream exit/stats rendering and the user's shell land in
+                // a valid location.
+                try {
+                    process.chdir(parentProjectRoot);
+                } catch {
+                    // best-effort
+                }
+
                 setMessages((prev) => [
                     ...prev,
                     {
@@ -2725,6 +2734,8 @@ export const OverlayContainer = forwardRef<OverlayContainerHandle, OverlayContai
                         timestamp: new Date(),
                     },
                 ]);
+                triggerExit();
+                return;
             } catch (error) {
                 setMessages((prev) => [
                     ...prev,
@@ -2735,16 +2746,14 @@ export const OverlayContainer = forwardRef<OverlayContainerHandle, OverlayContai
                         timestamp: new Date(),
                     },
                 ]);
+                setUi((prev) => ({
+                    ...prev,
+                    isProcessing: false,
+                    isCancelling: false,
+                    isThinking: false,
+                }));
+                return; // keep session alive so the user can read the error
             }
-
-            setUi((prev) => ({
-                ...prev,
-                isProcessing: false,
-                isCancelling: false,
-                isThinking: false,
-            }));
-
-            triggerExit();
         }, [ui.worktreeExitState, setUi, setMessages, buffer]);
 
         // Handle worktree exit cancel
