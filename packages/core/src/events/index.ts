@@ -613,6 +613,13 @@ export interface AgentEventMap {
      * Fired when the agent is fully stopped.
      */
     'agent:stopped': void;
+
+    /**
+     * Fired when /exit is run in a worktree and user should be prompted for cleanup.
+     */
+    'worktree:exit-prompt': {
+        worktreePath: string;
+    };
 }
 
 export type ToolBackgroundEvent = AgentEventMap['tool:background'];

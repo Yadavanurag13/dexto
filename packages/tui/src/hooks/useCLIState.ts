@@ -133,6 +133,7 @@ export function useCLIState({
         planModeActive: false,
         planModeInitialized: false,
         commandOutput: null,
+        worktreeExitState: null,
     });
 
     // Input state
