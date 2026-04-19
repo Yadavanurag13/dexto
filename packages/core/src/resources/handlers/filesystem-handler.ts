@@ -332,11 +332,17 @@ export class FileSystemResourceHandler implements InternalResourceHandler {
             '.cache',
             '.vscode',
             '.idea',
-            '.changeset',
             '.github',
             '.husky',
             'tmp',
             'temp',
+            // Agent/tool-specific config directories - these are internal config,
+            // not user-editable resources that should be referenced with @
+            '.agent',
+            '.agents',
+            '.claude',
+            '.cursor',
+            '.conductor',
         ];
         return ignoredDirectories.includes(basename);
     }
